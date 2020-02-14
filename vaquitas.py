@@ -5,6 +5,7 @@ import threading
 
 inicioPuente = 10
 largoPuente = 20
+semaforoPuente = threading.Semaphore(1)
 
 class Vaca(threading.Thread):
   def __init__(self):
@@ -13,8 +14,14 @@ class Vaca(threading.Thread):
     self.velocidad = random.uniform(0.1, 0.5)
 
   def avanzar(self):
+    if (self.posicion == inicioPuente - 1):
+      semaforoPuente.acquire()
+
     time.sleep(self.velocidad)
     self.posicion += 1
+
+    if (self.posicion == inicioPuente + largoPuente):
+      semaforoPuente.release()
 
   def dibujar(self):
     print(' ' * self.posicion + "🐮")
